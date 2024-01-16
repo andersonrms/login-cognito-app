@@ -5,10 +5,24 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useForm, Controller } from 'react-hook-form';
-import { signIn } from "aws-amplify/auth"
+import { Amplify } from 'aws-amplify';
+import { signIn, confirmSignIn } from "aws-amplify/auth"
 import { useTheme } from '@mui/material';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+
+
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: 'us-east-1_uOo0suwuK',
+      userPoolClientId: '7jacuqaqc62ndpebu0i7fotqi9',
+    }
+  },
+
+})
+
 
 interface LoginProps {
     email: string;
@@ -24,7 +38,6 @@ type loginSchemaProps = z.infer<typeof loginSchema>;
 
 export default function Login () {
   const theme = useTheme();
-
   const { handleSubmit, formState: { errors }, control } = useForm<loginSchemaProps>({
     defaultValues: {
         email: '',
@@ -33,13 +46,16 @@ export default function Login () {
     resolver: zodResolver(loginSchema)
   })
 
-  const onSubmit = async ({ email, password }: loginSchemaProps) => {
-    try{
-       const { isSignedIn } = await signIn({ username: email, password: password })
+  console.log(Amplify.getConfig())
 
-       console.log(isSignedIn)
+  const onSubmit = async ({ email, password }: loginSchemaProps) => {
+    console.log(email, password)
+    try{
+       const { nextStep } = await signIn({ username: 'anderson.ramos.dev@gmail.com', password: 'Ande@1995'})
+
+       console.log(nextStep)
     } catch (error){
-        console.error("Error registering user:", error)
+        console.error(error)
     }
   }
 
@@ -73,6 +89,7 @@ export default function Login () {
                         <Controller 
                             name='password'
                             control={control}
+                            defaultValue='b&EGIf95'
                             render={({ field }) => (
                                 <TextField 
                                     label='password'

@@ -1,18 +1,7 @@
 import Image from 'next/image'
 import styles from './page.module.css'
-import { Amplify } from 'aws-amplify';
 
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId: 'us-east-1_hGZX3mUBp',
-      userPoolClientId: '36r2q4glpts7is6k7nclcsr5dc',
-      loginWith: {
-        username: true,
-      }
-    }
-  }
-})
+
 
 export default function Home() {
   return (
